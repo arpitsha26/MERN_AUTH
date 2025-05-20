@@ -1,6 +1,6 @@
 
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import jwt, { verify } from "jsonwebtoken";
 import userModel from "../models/userModels.js";
 
 import transporter from "../config/nodemailer.js";
@@ -128,5 +128,85 @@ export const logout = async (req, res) => {
 
     }
 }
+// send Verification email
+export const sendVerifyOtp =async(req,res)=>{
+   try {
+    const {userId}= req.body;
+    const user= await userModel.findById(userId);
 
+    if(user.isAccountVerified) {
+        return res.json({success:false, message: "Acoount alreday verified"})
+    }
+
+   const otp=String(Math.floor(1000000+ Math.random()*900000));
+   user.verifyOtp= otp;
+   verifyOtpExpireAt=Date.now()+24*60*60*1000;
+   
+   await user.save();
+
+   const mailOptions={
+            from:process.env.SENDER_EMAIL,
+            to: user.email,
+            subject:'Account Verification OTP',
+            text:`Your otp is ${otp}. Verify your account using this OTP.`
+   }
+
+   await transporter.sendMail(mailOptions);
+
+   return res.json({success: true, message: "send otp successfully"})
+
+
+   } catch (error) {
+    return res.json({
+            sucess: false, message: error.message
+        })
+   }
+}
+
+
+export const verifyEmail = async(req, res)=>{
+    const {userId, otp }= req.body;
+    if(!userId || !otp){
+        return res.json({
+            success: false, message: "missing details"
+        })
+    }
+
+    try {
+        const user=await userModel.findById(userId);
+        if(!user){
+            return res.json({
+            success: false, message: "user with this id not found"
+        });
+
+        }
+
+        if (user.verifyOtp==='' || user.verifyOtp!==otp){
+            return res.json({
+            success: false, message: "invalid otp"
+        })
+
+        if(user.verifyOtpExpireAt<Date.now()){
+            return res.json({
+            success: false, message: "otp expired"})
+        }
+        user.isAccountVerified= true;
+        user.verifyOtp= '';
+        user.verifyOtpExpireAt=0;
+
+        await user.save();
+        return res.json({
+            success:true, message:"email verified succesfully"
+        })
+        }
+
+       
+        
+    } catch (error) {
+        return res.json({
+            success: false, message:error.message
+        })
+        
+    }
+}
 
