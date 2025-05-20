@@ -1,7 +1,9 @@
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import userModel from "../models/userModels";
+import userModel from "../models/userModels.js";
+
+import transporter from "../config/nodemailer.js";
 
 
 
@@ -33,7 +35,18 @@ export const register = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
-        })
+        });
+        // sending welcome email
+        
+        const mailOptions={
+            from:process.env.SENDER_EMAIL,
+            to: email,
+            subject:'Welcome to my platform',
+            text:`your account has been created with email id: ${email}`
+        }
+
+        await transporter.sendMail(mailOptions);
+
 
         return res.json({
             success: true
@@ -51,44 +64,46 @@ export const login = async (req, res) => {
 
     if (!email || !password) {
         return res.json({
-            sucess: false, message: "email and password are required"
-        })
+            success: false, 
+            message: "Email and password are required"
+        });
+    }
 
-        try {
-            const user = await userModel.findOne({ email });
-            if (!user) {
-                return res.json({ success: false, message: "user not found" })
-            }
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
 
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                return res.json({
-                    success: false,
-                    message: "Invalid password"
-                })
-            }
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-            res.cookie('token', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            });
-
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.json({
-                success: true
-            });
-
-
-
-        } catch (error) {
-            return res.json({
-                sucess: false, message: error.message
+                success: false,
+                message: "Invalid password"
             });
         }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        return res.json({
+            success: true
+        });
+
+    } catch (error) {
+        return res.json({
+            success: false, 
+            message: error.message
+        });
     }
-}
+};
+
 
 export const logout = async (req, res) => {
     try {
