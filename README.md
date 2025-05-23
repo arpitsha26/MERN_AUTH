@@ -85,6 +85,67 @@ User Schema (MongoDB - Mongoose)
 |--------|-------------|------------------|----------------|
 | GET    | `/data`     | Fetch user data  | ✅             |
 
+
+Sample Postman Requests
+1. Register
+POST /api/auth/register
+  ```bash
+   {
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "yourpassword"
+ }
+```
+
+2. Login
+POST /api/auth/login
+  ```bash
+{
+  "email": "john@example.com",
+  "password": "yourpassword"
+}
+```
+
+3. Send Email Verification OTP
+POST /api/auth/send-verify-otp
+(Requires Auth Cookie)
+```bash
+{}
+```
+
+4. Verify Account
+POST /api/auth/verify-account
+```bash
+{
+  "userId": "64adfd8e1a37bb0f08f10b20",
+  "otp": "123456"
+}
+```
+5. Send Password Reset OTP
+POST /api/auth/send-reset-otp
+``` bash
+{
+  "email": "john@example.com"
+}
+```
+6. Reset Password
+POST /api/auth/reset-password
+``` bash
+{
+  "email": "john@example.com",
+  "otp": "123456",
+  "newPassword": "newSecurePassword"
+}
+```
+
+7. Get User Data
+GET /api/user/data
+(Requires Auth Cookie)
+Headers:
+Content-Type: application/json
+
+
+
    
 
    
