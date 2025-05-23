@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import { connect } from "mongoose";
 import connectDB from "./config/mongodb.js";
 import authRouter from "./routes/authRoute.js"
+import userRouter from "./routes/userRoute.js";
 
 const app = express();
 const port=process.env.PORT ||4000
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({credentials:true}));
 app.use('/api/auth', authRouter)
+app.use('/api/user', userRouter)
 
 app.get('/', (req,res)=>{
     res.send('API working fine');
