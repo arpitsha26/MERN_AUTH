@@ -60,23 +60,30 @@ User Schema (MongoDB - Mongoose)
   resetOtpExpireAt: { type: Number, default: 0 }
   }
 ```
-API Endpoints
-Base URL: /api
+## API Endpoints
 
-Auth Routes (/api/auth)
-Method    Endpoint	       Description	                  Protected
-POST	    /register	       Register new user              	No
-POST	    /login      	   Login existing user            	No
-POST	    /logout	         Logout user	                    No
-POST	    /send-verify-otp Send OTP to verify email	        Yes
-POST	    /verify-account	 Verify user email with OTP	      Yes
-POST      /is-auth	       Check if user is authenticated	  Yes
-POS	      /send-reset-otp	 Send password reset OTP	        No
-POT	      /reset-password	 Reset password using OTP	        No
+### Base URL: `/api`
 
-User Routes (/api/user)
-Method	   Endpoint	       Description	                   Protected
-GET	       /data        	 Fetch user data	                Yes
+### Auth Routes (`/api/auth`)
+
+| Method | Endpoint             | Description                    | Auth Required |
+|--------|----------------------|--------------------------------|----------------|
+| POST   | `/register`          | Register new user              | ❌             |
+| POST   | `/login`             | Login existing user            | ❌             |
+| POST   | `/logout`            | Logout user                    | ❌             |
+| POST   | `/send-verify-otp`   | Send OTP to verify email       | ✅             |
+| POST   | `/verify-account`    | Verify user email with OTP     | ✅             |
+| POST   | `/is-auth`           | Check if user is authenticated | ✅             |
+| POST   | `/send-reset-otp`    | Send password reset OTP        | ❌             |
+| POST   | `/reset-password`    | Reset password using OTP       | ❌             |
+
+---
+
+### User Routes (`/api/user`)
+
+| Method | Endpoint    | Description      | Auth Required |
+|--------|-------------|------------------|----------------|
+| GET    | `/data`     | Fetch user data  | ✅             |
 
    
 
