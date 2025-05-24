@@ -145,6 +145,8 @@ Headers:
 Content-Type: application/json
 
 
+Deployed url:- http://aplats-env.eba-uyjg4ztm.ap-south-1.elasticbeanstalk.com/
+
 
    
 
