@@ -4,8 +4,8 @@ This is a backend API built using Node.js, Express, MongoDB, and JWT for authent
 
 ## Features
 
-- Register and login with hashed passwords
-- JWT-based authentication with secure HTTP-only cookies
+- Register and login with hashed passwords.
+- JWT-based authentication with secure HTTP-only cookies.
 - Email verification using OTP
 - Password reset functionality
 - Middleware-protected routes for user authentication
@@ -138,11 +138,7 @@ POST /api/auth/reset-password
 }
 ```
 
-7. Get User Data
-GET /api/user/data
-(Requires Auth Cookie)
-Headers:
-Content-Type: application/json
+
 
 
 Deployed url:- http://aplats-env.eba-uyjg4ztm.ap-south-1.elasticbeanstalk.com/
