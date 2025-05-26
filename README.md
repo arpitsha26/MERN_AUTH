@@ -141,7 +141,7 @@ POST /api/auth/reset-password
 
 
 
-Deployed url:- http://aplats-env.eba-uyjg4ztm.ap-south-1.elasticbeanstalk.com/
+Deployed api url:- http://aplats-env.eba-uyjg4ztm.ap-south-1.elasticbeanstalk.com/
 
 
    
